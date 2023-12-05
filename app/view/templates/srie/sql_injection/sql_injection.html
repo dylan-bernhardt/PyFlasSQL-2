@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}SQL Injection Demo{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2 class="text-center">Démonstration d'Injection SQL</h2>
+    <p>
+        Cette démonstration illustre comment une injection SQL peut être exploitée pour compromettre la sécurité d'une application web. L'injection SQL est une technique d'attaque qui permet d'insérer ou "injecter" une requête SQL malveillante à partir des données d'entrée fournies par l'utilisateur à l'application. Une injection SQL réussie peut avoir plusieurs conséquences, telles que la lecture de données sensibles, la modification ou la suppression de données, l'exécution d'opérations d'administration sur la base de données, et plus encore.
+    </p>
+
+    <h3>Recherche d'Articles</h3>
+    <p>
+        Pour l'exemple, nous avons ajouté une table <strong>produit</strong> à la base de donnée du PyFlaSQL qui contient des informations sur divers produits (nom, couleur, quantité). Vous pouvez rechercher des informations sur un article en entrant son nom ci-dessous. Essayez par exemple de rechercher les informations du produit "Chaise" :
+    </p>
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+            <form method="post">
+                <div class="form-group">
+                    <label for="user_input">Nom de l'article</label>
+                    <input type="text" class="form-control" id="user_input" name="user_input" placeholder="Entrez le nom de l'article">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if content.injection_result %}
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-8">
+                <h3>Résultats de la Recherche :</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            {% for column in content.column_names %}
+                                <th>{{ column }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in content.injection_result %}
+                            <tr>
+                                {% for item in row %}
+                                    <td>{{ item }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if content.error %}
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-8">
+                <div class="alert alert-danger" role="alert">
+                    Erreur : {{ content.error }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <h3 class="mt-5">Exemple d'Injection SQL</h3>
+    <p>
+        Si une application ne filtre pas correctement les entrées utilisateur, un attaquant peut injecter des commandes SQL malveillantes. Par exemple, en utilisant l'entrée <code>' OR '1'='1</code>, un attaquant pourrait forcer la requête à retourner toutes les entrées d'une table. De même, avec <code>'UNION SELECT * FROM user_db--'</code>, il pourrait extraire toutes les données de la table <code>user_db</code> qui ici contient toutes les données des utilisateurs (nom, mot de passe, role), ce qui est extrêmement dangereux. Vous pouvez essayer de rentrer ces commandes ci-dessus pour voir le résultat.
+    </p>
+
+    <h3 class="mt-5">Prévention de l'Injection SQL</h3>
+    <p>
+        Pour protéger une application contre les injections SQL, les développeurs doivent suivre plusieurs bonnes pratiques de sécurité, notamment :
+    </p>
+    <ul>
+        <li><strong>Utilisation de requêtes préparées :</strong> Les requêtes préparées (aussi appelées déclarations paramétrées) permettent de séparer clairement le code SQL de l'entrée des données, empêchant ainsi les attaquants d'injecter du code malveillant.</li>
+        <li><strong>Validation des entrées :</strong> Valider et nettoyer toutes les entrées utilisateur pour s'assurer qu'elles correspondent aux attentes de l'application et qu'elles ne contiennent pas de code SQL potentiellement dangereux.</li>
+        <li><strong>Limitation des privilèges :</strong> S'assurer que les comptes de base de données utilisés par l'application ont uniquement les privilèges nécessaires pour leur fonctionnement et rien de plus.</li>
+    </ul>
+
+</div>
+{% endblock %}

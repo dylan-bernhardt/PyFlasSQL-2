@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Command Execution Demo{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2 class="text-center">Démonstration d'une commande execution</h2>
+    <h3>Bash Execution</h3>
+    <p>
+        Cet exemple présente une fonctionnalité permettant de scanner un système connecté
+        sur le réseau à partir de son adresse IP. Un form récupère
+        l'ip du système à scanner. La commande est éxécutée en bash et la sortie s'affiche.
+    </p>
+
+    <h3>Introduction au nmap</h3>
+    <p>La fonction nmap peut être utilisée directement dans le terminal et permet à l'utilisateur de scanner le réseau
+        sur lequel il est connecté. Nous l'utiliserons ici sans flag puisque ce n'est pas le but de l'exercice.
+    </p>
+
+    <h3>Application</h3>
+    <p>Il vous suffit d'entrer l'adresse ip du système que vous souhaitez scanner</p>
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+            <form method="post">
+                <div class="form-group">
+                    <label for="user_input">IP du système</label>
+                    <input type="text" class="form-control" id="user_input" name="user_input"
+                        placeholder="Entrez l'adresse ip">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mt-2">Execute</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <h3>Résultat</h3>
+    {% if content.result %}
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <div class="container p-5 mt-1 mb-3" style="text-align :left !important">
+                <h5 class="mt-5 text-center">Output from shell:</h5>
+                <pre>{{ content["result"] }}</pre>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if content.error %}
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <div class="alert alert-danger" role="alert">
+                Erreur : {{ content.error }}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mt-5"></div>
+    <h2>Contre-mesures</h2>
+    <p>
+        Pour contrer les faiblesses des commands injections, plusieurs mesures peuvent être prises :
+    </p>
+    <ul>
+        <li>Vérifier et valider les entrées fournies.</li>
+        <li>Vérifier et valider les sorties fournies.</li>
+        <li>Utiliser des fonctions à paramètres, et fournir les entrées de l'uilisateur comme paramètre.</li>
+        <li>Utiliser une blacklist de caractères interdits.</li>
+    </ul>
+</div>
+
+</div>
+{% endif %}
+
+{% endblock %}

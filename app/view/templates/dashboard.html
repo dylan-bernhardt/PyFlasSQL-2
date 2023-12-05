@@ -1,0 +1,62 @@
+<!-- 
+This file is part of PyFlaSQL.
+Original author: Raphael Viera (raphael.viera@emse.fr)
+License: check the LICENSE file.
+-->
+{% extends "base.html" %}
+{% block title %}SRIE{% endblock %}
+{% block content %}
+<div class="container p-5 my-5">
+    <!-- Main Title -->
+    <h1 class="text-center">Bienvenue dans notre projet</h1>
+    <div class="container p-5 my-5 border">
+        <!-- Description -->
+        <p class="lead">
+            Ce projet est conçu pour illustrer et expliquer des failles de sécurité courantes dans les applications web.
+            À travers des exemples interactifs et des démonstrations, les utilisateurs peuvent apprendre comment ces
+            failles sont exploitées
+            et comment les prévenir.
+        </p>
+    </div>
+
+    <!-- Failles de sécurité section -->
+    <h2 class="mt-5 my-5 text-center">Les Failles de Sécurité</h2>
+
+    <div class="container p-5 my-5 border">
+        <p class="lead">
+            Dans ce projet, nous explorons trois failles de sécurité majeures qui ont été volontairement implémentées,
+            chacune présentée avec des détails techniques et des exemples pratiques.
+        </p>
+        <ol class="list-group mt-5">
+            <li class="list-group-item">
+                <h5><a href="{{url_for('blueprint.sql_injection')}}" class="list-group-item-action">Injection SQL</a>
+                </h5>
+                <p class="lead">Cette faille permet à un attaquant d'injecter des commandes SQL malveillantes à travers
+                    l'interface utilisateur,
+                    affectant ainsi la base de données sous-jacente. Nous démontrons comment ces attaques sont menées et
+                    comment les prévenir.
+                </p>
+            </li>
+            <li class="list-group-item">
+                <h5><a href="{{url_for('blueprint.cryptographic_failures')}}" class="list-group-item-action">Failles
+                        Cryptographiques</a></h5>
+                <p class="lead">Cette section explore les faiblesses dans l'implémentation de la cryptographie, telles
+                    que l'utilisation de
+                    hachages MD5 obsolètes. Nous montrons comment ces faiblesses peuvent être exploitées et comment
+                    utiliser des méthodes de
+                    cryptographie plus sûres.
+                </p>
+            </li>
+            <li class="list-group-item">
+                <h5><a href="{{url_for('blueprint.command_execution')}}" class="list-group-item-action">Command
+                        execution</a></h5>
+                <p class="lead">
+                    Cette faille permet d'injection du code bash directement sur le système d'exploitation du serveur.
+                    Nous modélisons cette faille via un formulaire permettant à l'utilisateur de scanner un ordinateur
+                    sur son réseau à l'aide de la commande nmap.
+                </p>
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Utilisation d'une faille cryptographique{% endblock %}
+
+{% block content %}
+<h1 class="text-center mt-3">Utilisation d'une faille cryptographique</h1>
+<div class="container mt-5">
+    <h2>Introduction au Hachage</h2>
+    <p>
+        Le hachage est une fonction cryptographique essentielle qui convertit les données en une chaîne de caractères de longueur fixe, appelée hash. Cette opération est fondamentale pour la sécurité informatique car elle permet de vérifier l'intégrité des données sans révéler leur contenu. Les fonctions de hachage sont conçues pour être à sens unique, ce qui signifie qu'il est infaisable de retrouver les données originales à partir de leur hash. Cela est crucial pour stocker les mots de passe de manière sécurisée, où même l'accès à la base de données ne devrait pas compromettre les mots de passe des utilisateurs.
+    </p>
+</section>
+
+<section id="hashing-md5">
+    <h2>Le Hachage MD5</h2>
+    <p>
+        MD5 (Message Digest Algorithm 5) est un algorithme de hachage qui a été largement répandu pour vérifier l'intégrité des données. Cependant, des vulnérabilités ont été découvertes, permettant à des attaquants de créer des collisions de hachage, où deux ensembles de données différents produisent le même hash MD5. Cela remet en question l'intégrité des données et ouvre la porte à des attaques de sécurité, telles que l'injection de code malveillant tout en conservant le même hash ou même de décoder des mots de passe "simples".
+    </p>
+</section>
+
+<div class="mt-4">
+    <h3>Application</h3>
+    <p>
+        Le PyFlaSQL utilisé ici est implémenté avec l'utilisation du hashage MD5 pour stocker les mots de passe dans la base de donnée. Je vous propose de créer un nouveau compte, de regarder la valeur du hashage du mot de passe et de tenter de le décrypter. Combiné avec une faille permettant des injections SQL (cf : <a href="../sql_injection/sql_injection">Injection SQL</a>), on pourrait ainsi connaitre les mots de passe de chaque utilisateur.
+    </p>
+</div>
+
+    <h3>Enregistrement dans la base de donnée :</h3>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="alert alert-warning">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+    <form method="post">
+        <div class="form-group">
+            <label for="username">Nom d'utilisateur :</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Mot de passe :</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
+    </form>
+
+
+    {% if post_data %}
+    <div class="mt-4">
+        <h3 class="mt-4">Données capturées ( par SQL injection par exemple ) :</h3>
+        <p>Nom d'utilisateur: {{ post_data.username }}</p>
+        <p>Mot de passe : {{ post_data.password }}</p>
+    </div>
+    {% endif %}
+
+    {% if erreur %}
+    <div class="mt-4">
+        <p class="alert alert-danger">Erreur : {{ erreur }}</p>
+    </div>
+    {% endif %}
+
+    <div class="mt-5">
+        <h3>Craquer un hachage MD5</h3>
+        <p>
+            Le hachage MD5 est une ancienne fonction de hachage qui n'est plus considérée comme sécurisée pour les applications cryptographiques. En raison de sa vulnérabilité aux attaques de collision et à sa rapidité de calcul, il est possible de "craquer" ou de retrouver le texte original à partir d'un hachage MD5 donné, surtout si le texte original est un mot de passe faible ou commun.
+        </p>
+        <p>
+            Des services en ligne existent pour tenter de craquer les hachages MD5 en utilisant des bases de données de hachages précalculés, connues sous le nom de "rainbow tables". Pour voir comment cela fonctionne, vous pouvez essayer de craquer un hachage MD5 en utilisant le service suivant :
+        </p>
+        <a href="https://md5decrypt.net" target="_blank" class="btn btn-warning">Essayer de craquer un MD5</a>
+    </div>
+
+    <div class="mt-5"></div>
+        <h2>Contre-mesures</h2>
+        <p>
+            Pour contrer les faiblesses des algorithmes de hachage comme MD5, plusieurs mesures peuvent être prises :
+        </p>
+        <ul>
+            <li><strong>Utilisation d'algorithmes de hachage modernes :</strong> Privilégiez des fonctions de hachage robustes et éprouvées telles que SHA-256 ou SHA-3. Ces algorithmes sont conçus pour résister aux attaques actuelles et sont régulièrement évalués par la communauté de la sécurité.</li>
+            <li><strong>Salage des hashes :</strong> Ajoutez un sel unique à chaque mot de passe avant de le hacher. Cela empêche les attaques par tables arc-en-ciel et rend les attaques par force brute beaucoup plus difficiles.</li>
+            <li><strong>Fonctions de hachage adaptatives :</strong> Utilisez des fonctions telles que bcrypt, scrypt ou Argon2 qui sont conçues pour être coûteuses en temps et en ressources, ce qui décourage les attaques par force brute.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
